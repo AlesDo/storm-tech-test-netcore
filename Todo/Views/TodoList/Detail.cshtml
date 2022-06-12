@@ -21,14 +21,28 @@
         <li class="list-group-item">
            @if (Model.ShowDone)
                         {
-                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@false">
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@false" asp-route-orderByRank="@Model.OrderByRank">
                 <strong>Hide done items</strong>
             </a>
                         }
                         else
                         {
-                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@true">
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@true" asp-route-orderByRank="@Model.OrderByRank">
                 <strong>Show done items</strong>
+            </a>
+                        }
+        </li>
+        <li class="list-group-item">
+           @if (Model.OrderByRank)
+                        {
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@Model.ShowDone" asp-route-orderByRank="false">
+                <strong>Order by importance</strong>
+            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@Model.ShowDone" asp-route-orderByRank="true">
+                <strong>Order by rank</strong>
             </a>
                         }
         </li>

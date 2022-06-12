@@ -26,7 +26,7 @@ namespace Todo.Tests
                     .WithItem("sweets", Importance.Low)
                     .Build();
 
-         TodoListDetailViewmodel todoListDetailViewmodel = new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title, todoList.Items.Select((todoItem) => new TodoItemSummaryViewmodel(todoItem.TodoItemId, todoItem.Title, todoItem.IsDone, new UserSummaryViewmodel("alice", "alice@example.com"), todoItem.Importance)).ToList());
+         TodoListDetailViewmodel todoListDetailViewmodel = new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title, todoList.Items.Select((todoItem) => new TodoItemSummaryViewmodel(todoItem.TodoItemId, todoItem.Title, todoItem.IsDone, new UserSummaryViewmodel("alice", "alice@example.com"), todoItem.Importance, todoItem.Rank)).ToList());
 
          todoListDetailViewmodel.Items.Select((item) => item.Importance).Should().BeInAscendingOrder();
       }
@@ -43,7 +43,7 @@ namespace Todo.Tests
                     .WithItem("sweets", Importance.Low)
                     .Build();
 
-         TodoListDetailViewmodel todoListDetailViewmodel = new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title, todoList.Items.Select((todoItem, index) => new TodoItemSummaryViewmodel(todoItem.TodoItemId, todoItem.Title, index % 2 == 0, new UserSummaryViewmodel("alice", "alice@example.com"), todoItem.Importance)).ToList(), false);
+         TodoListDetailViewmodel todoListDetailViewmodel = new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title, todoList.Items.Select((todoItem, index) => new TodoItemSummaryViewmodel(todoItem.TodoItemId, todoItem.Title, index % 2 == 0, new UserSummaryViewmodel("alice", "alice@example.com"), todoItem.Importance, todoItem.Rank)).ToList(), false);
 
          todoListDetailViewmodel.FilteredItems.Should().HaveCount(3);
       }
