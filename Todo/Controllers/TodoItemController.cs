@@ -68,7 +68,8 @@ namespace Todo.Controllers
 
         [HttpPost]
         [Route("[controller]/rank")]
-        public async Task<IActionResult> UpdateRank(UpdateRankRequest updateRankRequest)
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateRank([FromBody] UpdateRankRequest updateRankRequest)
         {
             if (!ModelState.IsValid)
             {
