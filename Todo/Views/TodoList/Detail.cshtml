@@ -2,6 +2,7 @@
 @using Todo.Data.Entities
 @using Todo.Services
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
+@inject GravatarClient GravatarClient
 
 @{
     ViewData["Title"] = $"List: {Model.Title}";
@@ -62,6 +63,7 @@
                     contextualClass = "";
                     break;
             }
+            string gravatarName = await GravatarClient.GetName(item.ResponsibleParty.Email);
 
             <li class="list-group-item @contextualClass">
                 
@@ -86,7 +88,8 @@
                         @item.ResponsibleParty.UserName
 
                         <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
-
+                        <br>
+                        @gravatarName
                     </small>
                 </div>
                 </div>

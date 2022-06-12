@@ -8,6 +8,8 @@ using Todo.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Todo.Services;
+using System;
 
 namespace Todo
 {
@@ -44,6 +46,12 @@ namespace Todo
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();
+            });
+
+            services.AddHttpClient<GravatarClient>(httpClient =>
+            {
+               httpClient.BaseAddress = new Uri("https://en.gravatar.com");
+               httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Todo");
             });
         }
 
