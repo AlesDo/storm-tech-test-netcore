@@ -1,11 +1,14 @@
 ﻿@using Todo.Controllers
+@using Todo.Data
 @using Todo.Data.Entities
 @using Todo.Services
-@model Todo.Models.TodoLists.TodoListDetailViewmodel
+@using Todo.Views.TodoItem;
+@model Todo.Models.TodoLists.TodoListWithAddViewModel
 @inject GravatarClient GravatarClient
+@inject ApplicationDbContext dbContext
 
 @{
-    ViewData["Title"] = $"List: {Model.Title}";
+    ViewData["Title"] = $"List: {Model.TodoListDetailViewmodel.Title}";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -15,40 +18,84 @@
     <ul class="list-group">
 
         <li class="list-group-item">
-            <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
+            <a id="addLink" onclick="$('#addLink').hide(); $('#addForm').show();">
                 <strong>Add New Item</strong>
             </a>
+            <div id="addForm" style="display: none;">
+                <form method="post" asp-action="CreateItem">
+
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(m => m.TodoItemEditFields.TodoListTitle)
+            @Html.HiddenFor(m => m.TodoListDetailViewmodel.TodoListId)
+            @Html.HiddenFor(m => m.TodoListDetailViewmodel.ShowDone)
+            @Html.HiddenFor(m => m.TodoListDetailViewmodel.OrderByRank)
+
+            <div class="form-group">
+                <label asp-for="TodoItemEditFields.Title"></label>
+                <input asp-for="TodoItemEditFields.Title" class="form-control" />
+                <span asp-validation-for="TodoItemEditFields.Title" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="TodoItemEditFields.Importance"></label>
+                @Html.DropDownListFor(
+                    m => m.TodoItemEditFields.Importance,
+                    SelectListConvenience.ImportanceSelectListItems,
+                    new {@class="form-control"}
+                    )
+                <span asp-validation-for="TodoItemEditFields.Importance" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TodoItemEditFields.ResponsiblePartyId"></label>
+                @Html.DropDownListFor(
+                    m => m.TodoItemEditFields.ResponsiblePartyId,
+                    dbContext.UserSelectListItems(),
+                    new {@class="form-control"}
+                    )
+                <span asp-validation-for="TodoItemEditFields.ResponsiblePartyId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-default">Save</button>
+                <button type="reset" class="btn btn-default" onclick="$('#addLink').show(); $('#addForm').hide();">Cancel</button>
+            </div>
+
+        </form>
+            </div>
         </li>
         <li class="list-group-item">
-           @if (Model.ShowDone)
+           @if (Model.TodoListDetailViewmodel.ShowDone)
                         {
-                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@false" asp-route-orderByRank="@Model.OrderByRank">
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListDetailViewmodel.TodoListId" asp-route-showDone="@false" asp-route-orderByRank="@Model.TodoListDetailViewmodel.OrderByRank">
                 <strong>Hide done items</strong>
             </a>
                         }
                         else
                         {
-                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@true" asp-route-orderByRank="@Model.OrderByRank">
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListDetailViewmodel.TodoListId" asp-route-showDone="@true" asp-route-orderByRank="@Model.TodoListDetailViewmodel.OrderByRank">
                 <strong>Show done items</strong>
             </a>
                         }
         </li>
         <li class="list-group-item">
-           @if (Model.OrderByRank)
+           @if (Model.TodoListDetailViewmodel.OrderByRank)
                         {
-                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@Model.ShowDone" asp-route-orderByRank="false">
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListDetailViewmodel.TodoListId" asp-route-showDone="@Model.TodoListDetailViewmodel.ShowDone" asp-route-orderByRank="false">
                 <strong>Order by importance</strong>
             </a>
                         }
                         else
                         {
-                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@Model.ShowDone" asp-route-orderByRank="true">
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListDetailViewmodel.TodoListId" asp-route-showDone="@Model.TodoListDetailViewmodel.ShowDone" asp-route-orderByRank="true">
                 <strong>Order by rank</strong>
             </a>
                         }
         </li>
 
-        @foreach (var item in Model.FilteredItems)
+        @foreach (var item in Model.TodoListDetailViewmodel.FilteredItems)
         {
             string contextualClass;
             switch (item.Importance)

@@ -37,7 +37,7 @@ namespace Todo.Controllers
             var viewmodel = TodoListDetailViewmodelFactory.Create(todoList);
             viewmodel.ShowDone = showDone;
             viewmodel.OrderByRank = orderByRank;
-            return View(viewmodel);
+            return View(new TodoListWithAddViewModel(viewmodel));
         }
 
         [HttpGet]
@@ -61,5 +61,19 @@ namespace Todo.Controllers
 
             return RedirectToAction("Create", "TodoItem", new {todoList.TodoListId});
         }
-    }
+
+      [HttpPost]
+      [ValidateAntiForgeryToken]
+      public async Task<IActionResult> CreateItem(TodoListNewItemFields todoListWithAddViewmodel)
+      {
+         if (!ModelState.IsValid) { return View(todoListWithAddViewmodel); }
+
+         var item = new TodoItem(todoListWithAddViewmodel.TodoListDetailViewmodel.TodoListId, todoListWithAddViewmodel.TodoItemEditFields.ResponsiblePartyId, todoListWithAddViewmodel.TodoItemEditFields.Title, todoListWithAddViewmodel.TodoItemEditFields.Importance, todoListWithAddViewmodel.TodoItemEditFields.Rank);
+
+         await dbContext.AddAsync(item);
+         await dbContext.SaveChangesAsync();
+
+         return RedirectToAction("Detail", todoListWithAddViewmodel.TodoListDetailViewmodel);
+      }
+   }
 }

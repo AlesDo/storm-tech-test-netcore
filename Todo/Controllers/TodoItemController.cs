@@ -5,6 +5,7 @@ using Todo.Data;
 using Todo.Data.Entities;
 using Todo.EntityModelMappers.TodoItems;
 using Todo.Models.TodoItems;
+using Todo.Models.TodoLists;
 using Todo.Services;
 
 namespace Todo.Controllers
@@ -41,7 +42,7 @@ namespace Todo.Controllers
             return RedirectToListDetail(fields.TodoListId);
         }
 
-        [HttpGet]
+      [HttpGet]
         public IActionResult Edit(int todoItemId)
         {
             var todoItem = dbContext.SingleTodoItem(todoItemId);
