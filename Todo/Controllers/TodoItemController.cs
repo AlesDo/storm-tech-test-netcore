@@ -42,7 +42,7 @@ namespace Todo.Controllers
             return RedirectToListDetail(fields.TodoListId);
         }
 
-      [HttpGet]
+        [HttpGet]
         public IActionResult Edit(int todoItemId)
         {
             var todoItem = dbContext.SingleTodoItem(todoItemId);
@@ -64,6 +64,20 @@ namespace Todo.Controllers
             await dbContext.SaveChangesAsync();
 
             return RedirectToListDetail(todoItem.TodoListId);
+        }
+
+        [HttpPost]
+        [Route("[controller]/rank")]
+        public async Task<IActionResult> UpdateRank(UpdateRankRequest updateRankRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+               return BadRequest();
+            }
+            var todoItem = dbContext.SingleTodoItem(updateRankRequest.TodoItemId);
+            todoItem.Rank = updateRankRequest.Rank;
+            await dbContext.SaveChangesAsync();
+            return Ok(); 
         }
 
         private RedirectToActionResult RedirectToListDetail(int fieldsTodoListId)
