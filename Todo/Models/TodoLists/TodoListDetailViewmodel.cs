@@ -9,12 +9,16 @@ namespace Todo.Models.TodoLists
         public int TodoListId { get; }
         public string Title { get; }
         public ICollection<TodoItemSummaryViewmodel> Items { get; }
+        public bool ShowDone { get; set; }
 
-        public TodoListDetailViewmodel(int todoListId, string title, ICollection<TodoItemSummaryViewmodel> items)
+        public IEnumerable<TodoItemSummaryViewmodel> FilteredItems => this.ShowDone ?  this.Items : this.Items.Where((item) => !item.IsDone);
+
+        public TodoListDetailViewmodel(int todoListId, string title, ICollection<TodoItemSummaryViewmodel> items, bool showDone = true)
         {
             Items = items.OrderBy((item) => item.Importance).ToList();
             TodoListId = todoListId;
             Title = title;
+            ShowDone = showDone;
         }
     }
 }

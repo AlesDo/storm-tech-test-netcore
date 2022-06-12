@@ -18,8 +18,22 @@
                 <strong>Add New Item</strong>
             </a>
         </li>
+        <li class="list-group-item">
+           @if (Model.ShowDone)
+                        {
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@false">
+                <strong>Hide done items</strong>
+            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Detail" asp-route-todoListId="@Model.TodoListId" asp-route-showDone="@true">
+                <strong>Show done items</strong>
+            </a>
+                        }
+        </li>
 
-        @foreach (var item in Model.Items)
+        @foreach (var item in Model.FilteredItems)
         {
             string contextualClass;
             switch (item.Importance)
