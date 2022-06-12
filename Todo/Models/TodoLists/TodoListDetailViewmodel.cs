@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Todo.Models.TodoItems;
+using System.Linq;
 
 namespace Todo.Models.TodoLists
 {
@@ -11,7 +12,7 @@ namespace Todo.Models.TodoLists
 
         public TodoListDetailViewmodel(int todoListId, string title, ICollection<TodoItemSummaryViewmodel> items)
         {
-            Items = items;
+            Items = items.OrderBy((item) => item.Importance).ToList();
             TodoListId = todoListId;
             Title = title;
         }
